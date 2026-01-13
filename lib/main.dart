@@ -7,7 +7,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
   await Supabase.initialize(
-    url: 'https://supabase.com/dashboard/project/wezautnepobgnxdeyjcc',
+    url: 'https://wezautnepobgnxdeyjcc.supabase.co',
     anonKey:'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndlemF1dG5lcG9iZ254ZGV5amNjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjgxODcwODQsImV4cCI6MjA4Mzc2MzA4NH0.ejF7ZDD5QWQu6t0Vs9-zDHWsaRrf7yVAs7us9b2a_f8'
   );
   runApp(const ProviderScope(child:MyApp()));

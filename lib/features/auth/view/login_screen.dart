@@ -5,20 +5,22 @@ import 'package:demo_riverpod/services/auth_services.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class LoginScreen extends ConsumerWidget {
   const LoginScreen({super.key});
 
   @override
   Widget build(BuildContext context,WidgetRef ref) {
-    final  authService = AuthService();
+    final authServiceProvider = Provider<AuthService>((ref) => AuthService());
     final TextEditingController emailController = TextEditingController();
     final TextEditingController passwordController = TextEditingController();
     return Scaffold(
       backgroundColor: AppsColor.solid_backgroundColor,
       body: SingleChildScrollView(
-        child: Container(
+        child: SizedBox(
           width: double.infinity,
           height: MediaQuery.of(context).size.height,
           child: SafeArea(
@@ -133,13 +135,46 @@ class LoginScreen extends ConsumerWidget {
                               ),
                               SizedBox(height: 30.h),
                               ElevatedButton(
-                                onPressed: ()async {
+                                onPressed: () async {
                                   final email = emailController.text.trim();
                                   final password = passwordController.text.trim();
-                                  await authService.signIn(
-                                    email, 
-                                    password
-                                  );
+
+                                  if (email.isEmpty || password.isEmpty) {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(
+                                        content: Text(
+                                          'Email and password are required',
+                                        ),
+                                      ),
+                                    );
+                                    return;
+                                  }
+                                  final emailRegex = RegExp(r'^[^@\s]+@[^@\s]+\.[^@\s]+$',);
+                                  if (!emailRegex.hasMatch(email)) {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(
+                                        content: Text(
+                                          'Please enter a valid email address',
+                                        ),
+                                      ),
+                                    );
+                                    return;
+                                  }
+                                  try {
+                                    final authService = ref.read(authServiceProvider,);
+                                    await authService.signIn(email, password,ref);
+
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(
+                                        content: Text('Login successful'),
+                                      ),
+                                    );
+                                    context.push('/team');
+                                  } on AuthApiException catch (e) {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(content: Text(e.message)),
+                                    );
+                                  }
                                 },
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: Colors.transparent,

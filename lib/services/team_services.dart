@@ -1,4 +1,5 @@
 import 'package:demo_riverpod/core/supabase_cleint.dart';
+import 'package:flutter/cupertino.dart';
 
 class TeamService {
   final _client = SupabaseClientManager.client;
@@ -7,9 +8,9 @@ class TeamService {
     return DateTime.now().millisecondsSinceEpoch.toString().substring(7);
   }
 
-  Future<void> createTeam(String teamName, String userId) async {
+  Future<String> createTeam(String teamName, String userId) async {
     final joinCode = _generateJoinCode();
-
+    debugPrint('*******$joinCode');
     final team = await _client.from('teams').insert({
       'name': teamName,
       'join_code': joinCode,
@@ -21,6 +22,7 @@ class TeamService {
       'user_id': userId,
       'role': 'admin',
     });
+    return team['id'].toString();
   }
 
   Future<void> joinTeam(String joinCode, String userId) async {
@@ -34,10 +36,6 @@ class TeamService {
   }
 
   Future<Map<String, dynamic>> getUserTeam(String userId) async {
-    return await _client
-        .from('team_members')
-        .select('role, teams(*)')
-        .eq('user_id', userId)
-        .single();
+    return await _client.from('team_members').select('role, teams(*)').eq('user_id', userId).single();
   }
 }
