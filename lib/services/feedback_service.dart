@@ -20,7 +20,6 @@ class FeedbackService {
   Future<List<FeedbackModel>> getAllFeedback(String teamId) async {
     final res = await _client.from('feedback').select().eq('team_id', teamId);
 
-    return (res as List)
-      .map((e) => FeedbackModel.fromJson(e)).toList();
+    return (res as List).map((e) => FeedbackModel.fromJson(e)).toList();
   }
 }

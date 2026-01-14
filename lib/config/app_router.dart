@@ -1,5 +1,6 @@
 import 'package:demo_riverpod/features/auth/view/login_screen.dart';
 import 'package:demo_riverpod/features/feedback/feedback.dart';
+import 'package:demo_riverpod/features/feedback/submit_feedback.dart';
 import 'package:demo_riverpod/features/team/team_page.dart';
 import 'package:go_router/go_router.dart';
 
@@ -17,6 +18,10 @@ final GoRouter appRouter = GoRouter(
     GoRoute(
       path: '/feedbacklist',
       builder: (context, state) => Feedbacklist() ,
+    ),
+    GoRoute(
+      path: '/submitfeedback',
+      builder: (context, state) => SubmitFeedback() ,
     ),
   ],
 );

@@ -1,3 +1,5 @@
+import 'package:demo_riverpod/providers/feedback_provider.dart';
+
 class FeedbackModel {
   final String id;
   final String teamId;
@@ -29,4 +31,30 @@ class FeedbackModel {
     'message': message,
     'created_at': createdAt.toIso8601String(),
   };
+}
+
+extension FeedbackModelX on FeedbackModel {
+  FeedbackMode get feedbackMode {
+    switch (category.toLowerCase()) {
+      case 'work':
+        return FeedbackMode.work;
+      case 'culture':
+        return FeedbackMode.culture;
+      case 'management':
+        return FeedbackMode.management;
+      default:
+        return FeedbackMode.all;
+    }
+  }
+
+  String get timeAgo {
+    final diff = DateTime.now().difference(createdAt);
+    if (diff.inMinutes < 60) {
+      return '${diff.inMinutes} min ago';
+    } else if (diff.inHours < 24) {
+      return '${diff.inHours} hr ago';
+    } else {
+      return '${diff.inDays} day ago';
+    }
+  }
 }

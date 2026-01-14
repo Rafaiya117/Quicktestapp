@@ -72,8 +72,10 @@ class LoginScreen extends ConsumerWidget {
                       child: Container(
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(16.r),
+                          // ignore: deprecated_member_use
                           color: Colors.white.withOpacity(0.2),
                           border: Border.all(
+                            // ignore: deprecated_member_use
                             color: Colors.white.withOpacity(0.3),
                             width: 1.5,
                           ),

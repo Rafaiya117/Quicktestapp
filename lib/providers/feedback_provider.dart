@@ -12,3 +12,17 @@ final feedbackStreamProvider = StreamProvider.family<List<FeedbackModel>, String
 enum FeedbackMode { all, work, culture, management }
 
 final feedbackModeProvider = StateProvider<FeedbackMode>((ref) => FeedbackMode.all);
+final selectedFeedbackProvider = StateProvider<FeedbackModel?>((ref) => null);
+
+final filteredFeedbackProvider = Provider.family<AsyncValue<List<FeedbackModel>>, String>((ref, teamId) {
+  final feedbackAsync = ref.watch(feedbackStreamProvider(teamId));
+  final selectedMode = ref.watch(feedbackModeProvider);
+
+  return feedbackAsync.whenData((feedbacks) {
+    if (selectedMode == FeedbackMode.all) {
+      return feedbacks;
+    }
+    return feedbacks.where((f) => f.feedbackMode == selectedMode).toList();
+  });
+});
+
